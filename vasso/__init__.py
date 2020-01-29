@@ -1,6 +1,11 @@
 import os
 from flask import Flask
 from dotenv import load_dotenv
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
+
+db = SQLAlchemy()
+migrate = Migrate()
 
 
 def create_app(test_config=None):
@@ -36,13 +41,13 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-    from vasso.models import db, migrate
-
     db.init_app(app)
     migrate.init_app(app, db)
 
-    @app.route('/hello')
-    def hello():
-        return 'Hello, world !'
+    from vasso.auth import auth
+    from vasso.accounts import accounts
+
+    app.register_blueprint(auth)
+    app.register_blueprint(accounts)
 
     return app
