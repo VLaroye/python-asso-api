@@ -1,4 +1,5 @@
 from flask import jsonify
+from vasso import db
 from vasso.accounts import accounts
 from vasso.accounts.models import Account, AccountSchema
 
@@ -17,16 +18,23 @@ def create_account():
     return 'Create account'
 
 
-@accounts.route('/<account_name>', methods=['GET'])
-def get_account(account_name):
+@accounts.route('/<account_id>', methods=['GET'])
+def get_account(account_id):
+    account = Account.query.get_or_404(account_id)
+
+    return jsonify({'status': True, 'data': account_schema.dump(account)})
+
+
+@accounts.route('/<account_id>', methods=['POST', 'PUT'])
+def update_account(account_id):
     return 'Get account'
 
 
-@accounts.route('/<account_name>', methods=['POST', 'PUT'])
-def update_account(account_name):
-    return 'Get account'
+@accounts.route('/<account_id>', methods=['DELETE'])
+def delete_account(account_id):
+    account = Account.query.filter_by(id=account_id).first_or_404()
 
+    db.session.delete(account)
+    db.session.commit()
 
-@accounts.route('/<account_name>', methods=['DELETE'])
-def delete_account(account_name):
-    return 'Delete account'
+    return jsonify({'status': True})
