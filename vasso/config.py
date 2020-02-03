@@ -1,4 +1,7 @@
 from vasso.utils.get_env_variable import get_env_variable
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 def create_db_url(user, password, host, port, db_name):

@@ -1,4 +1,4 @@
-from vasso import db
+from vasso import db, ma
 from vasso.base_model import Base
 
 
@@ -13,3 +13,8 @@ class Account(Base):
 
     def __repr__(self):
         return f'<Post {self.name}>'
+
+
+class AccountSchema(ma.ModelSchema):
+    class Meta:
+        model = Account

@@ -1,13 +1,15 @@
 from flask import jsonify
 from vasso.accounts import accounts
-from vasso.accounts.models import Account
+from vasso.accounts.models import Account, AccountSchema
+
+account_schema = AccountSchema()
 
 
 @accounts.route('/', methods=['GET'])
 def list_accounts():
     accounts_list = Account.query.all()
 
-    return jsonify({'status': True, 'data': accounts_list})
+    return jsonify({'status': True, 'data': account_schema.dump(accounts_list, many=True)})
 
 
 @accounts.route('/', methods=['POST'])
