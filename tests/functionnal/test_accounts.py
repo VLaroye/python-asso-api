@@ -1,5 +1,5 @@
 import json
-
+from http import HTTPStatus
 
 def test_list_accounts(client, db):
     """
@@ -7,14 +7,14 @@ def test_list_accounts(client, db):
     WHEN the '/accounts' is requested (GET)
     THEN check the response is valid
     """
-    response = client.get('/accounts/')
+    response = client.get('/accounts')
 
     data = json.loads(response.data.decode())
 
     account = data['data'][0]
     status = data['status']
 
-    assert response.status_code == 200
+    assert response.status_code == HTTPStatus.OK
     assert status
     assert account['name'] == 'Account 1'
     assert account['id'] == 1
@@ -34,7 +34,7 @@ def test_get_account(client, db):
     account = data['data']
     status = data['status']
 
-    assert response.status_code == 200
+    assert response.status_code == HTTPStatus.OK
     assert status
     assert account['name'] == 'Account 1'
     assert account['id'] == 1
@@ -43,7 +43,23 @@ def test_get_account(client, db):
     # Check response when accounts doesn't exists
     response = client.get('/accounts/4')
 
-    assert response.status_code == 404
+    assert response.status_code == HTTPStatus.NOT_FOUND
+
+
+def test_create_account(client, db):
+    """
+    GIVEN a Flask application
+    WHEN the '/accounts' is required (POST)
+    THEN check the response is valid
+    """
+    response = client.post('/accounts', json={'name': 'Account 5', 'creator': 1})
+
+    data = json.loads(response.data.decode())
+
+    status = data['status']
+
+    assert response.status_code == HTTPStatus.OK
+    assert status
 
 
 def test_delete_account(client, db):
@@ -63,4 +79,4 @@ def test_delete_account(client, db):
     # Check response when doesn't exists
     response = client.delete('/accounts/4')
 
-    assert response.status_code == 404
+    assert response.status_code == HTTPStatus.NOT_FOUND
