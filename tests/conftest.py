@@ -21,15 +21,10 @@ def db(app):
 
     # Insert fake data
     user1 = User(username="User1", email="user1@email.com")
-    account1 = Account(name='Account 1', created_by='1')
+    account1 = Account(name='Account 1', owner_id='1')
 
     _db.session.add(user1)
     _db.session.add(account1)
     _db.session.commit()
 
     return _db
-
-
-
-
-

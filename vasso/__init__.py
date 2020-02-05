@@ -31,8 +31,10 @@ def create_app(config_class=DevelopmentConfig):
 
 
 def register_blueprints(app):
+    from vasso.errors import errors
     from vasso.auth import auth
     from vasso.accounts import accounts
 
+    app.register_blueprint(errors)
     app.register_blueprint(auth)
     app.register_blueprint(accounts)
